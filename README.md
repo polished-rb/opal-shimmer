@@ -1,6 +1,6 @@
 # Opal::Shimmer
 
-TODO: Write a gem description
+Shimmer is an application state and configuration management library built with Opal, a Ruby-to-JS compiler.
 
 ## Installation
 
