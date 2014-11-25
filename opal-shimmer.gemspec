@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "opal-shimmer"
   spec.version       = Opal::Shimmer::VERSION
   spec.authors       = ["Jared White"]
-  spec.email         = ["jared@siteshine.com"]
+  spec.email         = ["jared@mariposta.com"]
   spec.summary       = %q{TODO: Write a short summary. Required.}
   spec.description   = %q{TODO: Write a longer description. Optional.}
   spec.homepage      = ""
@@ -18,6 +18,8 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+	spec.add_dependency 'opal', ['>= 0.5.0', '< 1.0.0']
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency 'opal-rspec', '>= 0.2.1'
 end

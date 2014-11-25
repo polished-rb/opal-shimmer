@@ -1,4 +1,4 @@
-# Opal::Shimmer
+# Opal: Shimmer
 
 Shimmer is an application state and configuration management library built with Opal, a Ruby-to-JS compiler.
 
@@ -22,7 +22,7 @@ TODO: Write usage instructions here
 
 ## Contributing
 
-1. Fork it ( http://github.com/<my-github-username>/opal-shimmer/fork )
+1. Fork it ( http://github.com/jaredcwhite/opal-shimmer/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
