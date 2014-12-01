@@ -1,21 +1,74 @@
 module Shimmer
 
 	class Config
-	  def initialize(parent_level=nil)
+	  DEFAULT_CONFIG_PATH = "config"
+	
+	  def initialize(parent_key=nil, parent_level=nil)
+	    @parent_key = parent_key
 	    @parent_level = parent_level
 	    @store = {}
+	    @persisted_storage = Shimmer::Storage.new(self)
+	  end
+	  
+	  def parent_level
+	    @parent_level
+	  end
+	  def parent_key
+	    @parent_key || self.class::DEFAULT_CONFIG_PATH
 	  end
 	
-	  def method_missing(method_name, *args, &block)
-#	    puts method_name
-	    if method_name.to_s[-1] == "="
-	      @store[method_name.to_s[0..-2]] = args[0]
-	    else
-	      if @store.has_key?(method_name.to_s)
-	        @store[method_name.to_s]
-	      else
-	        @store[method_name.to_s] = self.class.new(self)
+	  def method_missing(input_method_name, *args, &block)
+      method_name = input_method_name.to_s
+
+	    if method_name[-1] == "="
+	      save_key = method_name[0..-2]
+	      @store[save_key] = args[0]
+	      if @persisted_storage.should_include?(save_key)
+	        @persisted_storage.save_value(save_key, args[0])
 	      end
+	    else
+	      if include?(method_name)
+	      	yield @store[method_name] if block
+	        @store[method_name]
+	      elsif @persisted_storage.should_include?(method_name)
+	        @store[method_name] = @persisted_storage.load_value(method_name)
+	        yield @store[method_name] if block
+	        @store[method_name]
+	      else
+	        new_config = self.class.new(method_name, self)
+	        yield new_config if block
+	        @store[method_name] = new_config
+	      end
+	    end
+	  end
+	  
+	  def persist(*keys)
+	    keys = [keys] unless keys.is_a?(Array)
+	    keys.each do |key|
+	      @persisted_storage.should_include(key)
+	    end
+	  end
+	  
+	  def generate_key_path
+	    if @parent_level
+        path_segments = [@parent_key]
+        reached_top = false
+        current_level = @parent_level
+      
+        until reached_top
+          if current_level and current_level.parent_key
+            path_segments << current_level.parent_key
+            current_level = current_level.parent_level
+          else
+            reached_top = true
+          end
+        end
+        
+        path_segments.reverse.join(".")
+      elsif @parent_key
+        @parent_key
+      else
+        self.class::DEFAULT_CONFIG_PATH
 	    end
 	  end
 	  
@@ -47,5 +100,5 @@ module Shimmer
 	    @store
 	  end
 	end
-
+	
 end

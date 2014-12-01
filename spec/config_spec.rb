@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Shimmer" do
+describe "Shimmer::Config" do
   let(:config) { config = Shimmer::Config.new }
 
   it "can set a single value" do
@@ -61,5 +61,13 @@ describe "Shimmer" do
     expect(config.some.nested.include?(:avalue)).to eq(true)
     expect(config.some.include?(:nested)).to eq(true)
     expect(config.some.include?(:bested)).to eq(false)
+  end
+  
+  it "supports a block / tap style setting" do
+    config.really.deep.namespace do |c|
+      c.value1 = 1
+      c.value2 = 2
+    end
+    expect(config.really.deep.namespace.value2).to eq(2)
   end
 end
