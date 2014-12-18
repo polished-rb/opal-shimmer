@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Opal::Shimmer::VERSION
   spec.authors       = ["Jared White"]
   spec.email         = ["jared@mariposta.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.description   = %q{An application state and configuration management library built with Opal}
+  spec.summary       = spec.description
   spec.homepage      = ""
   spec.license       = "MIT"
 
