@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jared@ealchemylabs.com"]
   spec.description   = %q{An application state and configuration management library built with Opal}
   spec.summary       = spec.description
-  spec.homepage      = "http://rubygems.org/gems/opal-shimmer"
+  spec.homepage      = "https://github.com/jaredcwhite/opal-shimmer"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
