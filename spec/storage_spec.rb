@@ -50,4 +50,58 @@ describe "Shimmer::Storage" do
     expect(config2.namespaced.avalue).to eq("Groovy!")
   end
   
+  it "allows for default values" do
+    # we have to make sure localStorage is nulled out here, otherwise
+    # the test will fail after the first time it's run :)
+    `window.localStorage.removeItem('config.somevalue')`
+    `window.localStorage.removeItem('config.othervalue')`
+  
+    config.persist_defaults do |c|
+      c.somevalue = "abc"
+      c.othervalue = 123
+    end
+    
+    expect(config.somevalue).to eq("abc")
+
+    config.somevalue = "xyz"    
+    expect(config.somevalue).to eq("xyz")
+    
+    config2 = Shimmer::Config.new
+    config2.persist_defaults do |c|
+      c.somevalue = "abc"
+      c.othervalue = 123
+    end
+    
+    expect(config2.somevalue).to eq("xyz")
+    expect(config2.othervalue).to eq(123)
+  end
+  
+  it "can delete a value" do
+    # we have to make sure localStorage is nulled out here, otherwise
+    # the test will fail after the first time it's run :)
+    `window.localStorage.removeItem('config.somevalue')`
+    `window.localStorage.removeItem('config.othervalue')`
+  
+    config.persist_defaults do |c|
+      c.somevalue = "abc"
+      c.othervalue = 123
+    end
+    
+    expect(config.somevalue).to eq("abc")
+
+    config.somevalue = "xyz"    
+    expect(config.somevalue).to eq("xyz")
+    
+    config.delete(:somevalue)
+    
+    config2 = Shimmer::Config.new
+    config2.persist_defaults do |c|
+      c.somevalue = "abc"
+      c.othervalue = 123
+    end
+    
+    expect(config2.somevalue).to eq("abc")
+    expect(config2.othervalue).to eq(123)
+  end 
+  
 end

@@ -29,5 +29,10 @@ module Shimmer
 	  def include?(key)
 	    `window.localStorage[#{@storage_path + '.' + key}] != null`
 	  end
+	  
+	  def delete_value(key)
+	    @include_keys.delete(key)
+	    `window.localStorage.removeItem(#{@storage_path + '.' + key})`
+	  end
 	end
 end

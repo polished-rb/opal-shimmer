@@ -8,6 +8,7 @@ module Shimmer
 	    @parent_level = parent_level
 	    @store = {}
 	    @persisted_storage = Shimmer::Storage.new(self)
+	    @in_persisting_block = false
 	  end
 	  
 	  def parent_level
@@ -22,9 +23,18 @@ module Shimmer
 
 	    if method_name[-1] == "="
 	      save_key = method_name[0..-2]
-	      @store[save_key] = args[0]
-	      if @persisted_storage.should_include?(save_key)
+	      if @in_persisting_block
+  	      unless @persisted_storage.should_include?(save_key)
+	          @persisted_storage.should_include(save_key)
+	        end
+	        unless @persisted_storage.include?(save_key)
+	          @persisted_storage.save_value(save_key, args[0])
+	        end
+	      elsif !@in_persisting_block and @persisted_storage.should_include?(save_key)
+	        @store[save_key] = args[0]
 	        @persisted_storage.save_value(save_key, args[0])
+	      else
+	        @store[save_key] = args[0]
 	      end
 	    else
 	      if include?(method_name)
@@ -47,6 +57,12 @@ module Shimmer
 	    keys.each do |key|
 	      @persisted_storage.should_include(key)
 	    end
+	  end
+	  
+	  def persist_defaults(&block)
+	    @in_persisting_block = true
+	    yield self
+	    @in_persisting_block = false
 	  end
 	  
 	  def generate_key_path
@@ -74,6 +90,13 @@ module Shimmer
 	  
 	  def include?(key)
 	    @store.include?(key)
+	  end
+	  
+	  def delete(key)
+	    if @persisted_storage.should_include?(key)
+	      @persisted_storage.delete_value(key)
+	    end
+	    @store.delete(key)
 	  end
 	  
 	  def nil?
