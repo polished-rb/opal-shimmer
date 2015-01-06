@@ -1,1 +1,1 @@
-require '../opal/shimmer'
+require 'shimmer'
