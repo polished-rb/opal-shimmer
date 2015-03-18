@@ -9,6 +9,7 @@ module Shimmer
 	    @store = {}
 	    @persisted_storage = Shimmer::Storage.new(self)
 	    @in_persisting_block = false
+	    @observer = Shimmer::Observer.new(self)
 	  end
 	  
 	  def parent_level
@@ -23,19 +24,28 @@ module Shimmer
 
 	    if method_name[-1] == "="
 	      save_key = method_name[0..-2]
+	      
 	      if @in_persisting_block
   	      unless @persisted_storage.should_include?(save_key)
 	          @persisted_storage.should_include(save_key)
 	        end
 	        unless @persisted_storage.include?(save_key)
 	          @persisted_storage.save_value(save_key, args[0])
+	          @observer.call_watcher(save_key, nil, args[0])
+	        else
+	        	@observer.call_watcher(save_key, nil, @persisted_storage.load_value(save_key))
 	        end
 	      elsif !@in_persisting_block and @persisted_storage.should_include?(save_key)
+  	      old_value = @persisted_storage.load_value(save_key)
 	        @store[save_key] = args[0]
 	        @persisted_storage.save_value(save_key, args[0])
+  	      @observer.call_watcher(save_key, old_value, @store[save_key])
 	      else
+  	      old_value = @store[save_key]
 	        @store[save_key] = args[0]
+  	      @observer.call_watcher(save_key, old_value, @store[save_key])
 	      end
+	      
 	    else
 	      if include?(method_name)
 	      	yield @store[method_name] if block
@@ -121,6 +131,15 @@ module Shimmer
 	  
 	  def to_h
 	    @store
+	  end
+	  
+	  
+	  ### Observer setup
+	  def watch(&block)
+	    watchdsl = @observer.dsl
+      if block_given?
+        watchdsl.instance_eval(&block)
+      end
 	  end
 	end
 	
