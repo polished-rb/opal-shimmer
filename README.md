@@ -20,50 +20,52 @@ Or install it yourself as:
 
 Shimmer is very easy to use right out of the box. I'm assuming you'll be using it within the context of a Rails application for this tutorial. Make sure you add `//= require shimmer` to your application.js manifest file.
 
-    # Set up the config object:
-    config = Shimmer::Config.new
-    
-    # Set some values:
-    config.somevalue = "Wow"
-    config.othervalue = ['This', 'is', 'great!']
-    
-    # Get some values:
-    puts config.somevalue  # > "Wow"
-    
-    # Use namespaces to define very specific values:
-    config.several.levels.deep.stringvalue = "Your string here"
-    puts config.several.levels.deep.stringvalue  # > "Your string here"
-    
-    # Check whether a value exists:
-    puts config.foo.nil?
-    
-    # Set stuff in a namespace using a block:
-    config.really.deep.namespace do |c|
-      c.value1 = 1
-      c.value2 = 2
-    end
-    
-    # Persist values across sessions using localStorage:
-    config.persist(:cease_and_persist)
-    config.cease_and_persist = "abc123"
-    
-    config2 = Shimmer::Config.new  # this loads up a brand new object
-    config2.persist(:cease_and_persist)
-    
-    puts config2.cease_and_persist  # > "abc123"  Aha! it works!
-    
-    # An easier way to persist values by setting initial defaults
-    # and not overwriting values that get set differently later:
-    config.persist_defaults do |c|
-      c.somevalue = "abc"
-      c.othervalue = 123
-    end
+```ruby
+# Set up the config object:
+config = Shimmer::Config.new
 
-    # ...user triggers some action...
-    config.somevalue = "xyz"
-    
-    # ...days later on a subsquent browser session...
-    puts config.somevalue  # > "xyz"  not "abc" - Yay!
+# Set some values:
+config.somevalue = "Wow"
+config.othervalue = ['This', 'is', 'great!']
+
+# Get some values:
+puts config.somevalue  # > "Wow"
+
+# Use namespaces to define very specific values:
+config.several.levels.deep.stringvalue = "Your string here"
+puts config.several.levels.deep.stringvalue  # > "Your string here"
+
+# Check whether a value exists:
+puts config.foo.nil?
+
+# Set stuff in a namespace using a block:
+config.really.deep.namespace do |c|
+  c.value1 = 1
+  c.value2 = 2
+end
+
+# Persist values across sessions using localStorage:
+config.persist(:cease_and_persist)
+config.cease_and_persist = "abc123"
+
+config2 = Shimmer::Config.new  # this loads up a brand new object
+config2.persist(:cease_and_persist)
+
+puts config2.cease_and_persist  # > "abc123"  Aha! it works!
+
+# An easier way to persist values by setting initial defaults
+# and not overwriting values that get set differently later:
+config.persist_defaults do |c|
+  c.somevalue = "abc"
+  c.othervalue = 123
+end
+
+# ...user triggers some action...
+config.somevalue = "xyz"
+
+# ...days later on a subsquent browser session...
+puts config.somevalue  # > "xyz"  not "abc" - Yay!
+```
     
 For more examples, look at the `config_spec.rb` and `storage_spec.rb` files in the `spec` folder.
 
