@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "opal-shimmer"
   spec.version       = Opal::Shimmer::VERSION
   spec.authors       = ["Jared White"]
-  spec.email         = ["jared@ealchemylabs.com"]
+  spec.email         = ["jared@jaredwhite.com"]
   spec.description   = %q{An application state and configuration management library built with Opal}
   spec.summary       = spec.description
   spec.homepage      = "https://github.com/jaredcwhite/opal-shimmer"
